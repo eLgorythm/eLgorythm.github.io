@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="id" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>0xFND Labs — Web3 & High-Performance Software Studio</title>
+  <meta name="description" content="0xFND Labs (0xfndlabs.my.id) - Boutique Web3 engineering, smart contract architecture, and high-performance fullstack web development." />
+  
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              500: '#10b981',
+              600: '#059669',
+              900: '#064e3b',
+              accent: '#38bdf8'
+            },
+            dark: {
+              bg: '#090a0f',
+              card: '#11131c',
+              border: '#1e2235',
+              hover: '#191d2c'
+            }
+          },
+          backgroundImage: {
+            'grid-pattern': 'radial-gradient(circle, rgba(255,255,255,0.07) 1px, transparent 1px)',
+            'code-glow': 'radial-gradient(600px circle at var(--x, 50%) var(--y, 50%), rgba(16, 185, 129, 0.08), transparent 40%)'
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #090a0f;
+      color: #e2e8f0;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+    
+    /* Fine tech grid background */
+    .bg-tech-grid {
+      background-size: 24px 24px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    }
+
+    /* Scanline effect for terminal elements */
+    .scanline {
+      background: linear-gradient(
+        to bottom,
+        rgba(255,255,255,0),
+        rgba(255,255,255,0) 50%,
+        rgba(0, 0, 0, 0.3) 50%,
+        rgba(0, 0, 0, 0.3)
+      );
+      background-size: 100% 4px;
+    }
+
+    /* Subtle custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #090a0f;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e2235;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #10b981;
+    }
+
+    .border-glow {
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .border-glow:hover {
+      border-color: rgba(16, 185, 129, 0.4);
+      box-shadow: 0 0 15px -3px rgba(16, 185, 129, 0.15);
+    }
+
+    /* Terminal blinking cursor */
+    .term-cursor {
+      display: inline-block;
+      width: 7px;
+      height: 13px;
+      background: #10b981;
+      vertical-align: text-bottom;
+      animation: term-blink 1s steps(1) infinite;
+    }
+    @keyframes term-blink {
+      50% { opacity: 0; }
+    }
+
+    /* Showcase wide preview on hover (pure CSS) */
+    .showcase-wide-preview {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: min(60rem, 90vw);
+      z-index: 30;
+      transform: translate(-50%, -48%) scale(0.92);
+      opacity: 0;
+      visibility: hidden;
+      border: 1px solid #1e2235;
+      border-radius: 14px;
+      overflow: hidden;
+      background: #11131c;
+      box-shadow: 0 30px 80px -15px rgba(0, 0, 0, 0.8);
+      transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+    }
+    .showcase-wide-preview img {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 70vh;
+      object-fit: cover;
+      object-position: top;
+    }
+    .showcase-wide-preview .grid > img {
+      max-height: 70vh;
+    }
+    .swp-cap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 14px;
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      border-top: 1px solid #1e2235;
+      color: #64748b;
+    }
+    .swp-cap b {
+      color: #38bdf8;
+    }
+    .showcase-item:hover .showcase-wide-preview {
+      opacity: 1;
+      visibility: visible;
+      transform: translate(-50%, -50%) scale(1);
+    }
+  </style>
+</head>
+<body class="bg-dark-bg text-slate-200 bg-tech-grid antialiased selection:bg-brand-500 selection:text-black">
+
+  <!-- Top System Status Ticker Bar -->
+  <div class="border-b border-dark-border bg-[#0d0f17]/90 backdrop-blur text-xs font-mono py-1.5 px-4 flex items-center justify-between text-slate-400 z-50 relative">
+    <div class="flex items-center space-x-4 overflow-hidden whitespace-nowrap">
+      <span class="flex items-center text-emerald-400 font-semibold">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping mr-2"></span>
+        SYSTEMS ONLINE
+      </span>
+      <span class="hidden sm:inline text-slate-600">|</span>
+      <span class="hidden sm:inline text-slate-400">0xFND CORE v2.4.0</span>
+      <span class="hidden md:inline text-slate-600">|</span>
+      <span class="hidden md:inline text-slate-400">ETH RPC: <span class="text-emerald-400">12ms</span></span>
+      <span class="hidden lg:inline text-slate-600">|</span>
+      <span class="hidden lg:inline text-slate-400">DOMAIN: <span class="text-sky-400">0xfndlabs.my.id</span></span>
+    </div>
+    <div class="flex items-center space-x-3 text-slate-400">
+      <button onclick="toggleCommandPalette()" class="hover:text-white transition flex items-center bg-dark-border/50 px-2 py-0.5 rounded text-[10px] border border-white/5">
+        <span class="mr-1">Tekan</span> <kbd class="bg-slate-800 text-emerald-400 px-1 rounded">⌘K</kbd>
+      </button>
+    </div>
+  </div>
+
+  <!-- Header Navigation -->
+  <header class="sticky top-0 z-40 bg-dark-bg/80 backdrop-blur-md border-b border-dark-border/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Brand Logo -->
+      <a href="#" class="flex items-center space-x-3 group">
+        <div class="w-9 h-9 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center group-hover:border-emerald-400 transition-colors">
+          <span class="font-mono font-bold text-emerald-400 text-sm">0x</span>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-mono font-bold text-base tracking-tight text-white flex items-center">
+            0xFND LABS
+            <span class="ml-2 text-[10px] font-normal px-1.5 py-0.2 bg-emerald-950 text-emerald-400 border border-emerald-800/60 rounded">ID</span>
+          </span>
+          <span class="text-[10px] text-slate-500 font-mono tracking-wider uppercase">Engineering & Web3</span>
+        </div>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-300">
+        <a href="#profile" class="hover:text-emerald-400 transition-colors">Profil</a>
+        <a href="#education" class="hover:text-emerald-400 transition-colors">Pendidikan</a>
+        <a href="#stack" class="hover:text-emerald-400 transition-colors">Tech Stack</a>
+        <a href="#services" class="hover:text-emerald-400 transition-colors">Layanan</a>
+        <a href="#projects" class="hover:text-emerald-400 transition-colors">Showcase</a>
+        <a href="https://github.com/eLgorythm" target="_blank" rel="noopener noreferrer" class="hover:text-emerald-400 transition-colors flex items-center gap-1.5 text-slate-200">
+          <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+          <span>GitHub</span>
+        </a>
+        <a href="#manifesto" class="hover:text-emerald-400 transition-colors">Manifesto</a>
+      </nav>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center space-x-3">
+        <a href="#contact" class="hidden sm:inline-flex items-center px-4 py-2 rounded-lg text-xs font-mono font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500 hover:text-black transition-all duration-200">
+          <svg class="w-3.5 h-3.5 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+          KONSULTASI HACK
+        </a>
+        
+        <!-- Copy Domain Button -->
+        <button onclick="copyDomain()" class="p-2 rounded-lg text-slate-400 hover:text-white bg-dark-card border border-dark-border hover:border-slate-600 transition" title="Salin Domain">
+          <svg id="copy-icon" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+        </button>
+
+        <!-- Mobile Menu Toggle -->
+        <button onclick="toggleMobileMenu()" class="md:hidden p-2 text-slate-400 hover:text-white">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Nav Drawer -->
+    <div id="mobile-menu" class="hidden md:hidden border-b border-dark-border bg-dark-card px-4 py-4 space-y-3 font-mono text-sm">
+      <a href="#profile" onclick="toggleMobileMenu()" class="block text-slate-300 hover:text-emerald-400">Profil</a>
+      <a href="#education" onclick="toggleMobileMenu()" class="block text-slate-300 hover:text-emerald-400">Pendidikan</a>
+      <a href="#stack" onclick="toggleMobileMenu()" class="block text-slate-300 hover:text-emerald-400">Tech Stack</a>
+      <a href="#services" onclick="toggleMobileMenu()" class="block text-slate-300 hover:text-emerald-400">Layanan</a>
+      <a href="#projects" onclick="toggleMobileMenu()" class="block text-slate-300 hover:text-emerald-400">Showcase</a>
+      <a href="https://github.com/eLgorythm" target="_blank" rel="noopener noreferrer" class="block text-emerald-400 font-semibold">GitHub (@eLgorythm)</a>
+      <a href="#contact" onclick="toggleMobileMenu()" class="block text-slate-300 hover:text-emerald-400">Hubungi Kami</a>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="relative pt-12 pb-20 md:pt-20 md:pb-32 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <!-- Hero Text -->
+        <div class="lg:col-span-7 space-y-6">
+          
+          <!-- Badge -->
+          <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-slate-900 border border-emerald-500/20 text-xs font-mono text-emerald-400">
+            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+            <span>0xFND LABS ARCHITECTURE & SOFTWARE STUDIO</span>
+          </div>
+
+          <!-- Headline -->
+          <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.15]">
+            Membangun Protokol <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-teal-300 to-sky-400">Web3 & Sistem Web</span> Berkinerja Tinggi.
+          </h1>
+
+          <!-- Description -->
+          <p class="text-slate-400 text-base sm:text-lg max-w-2xl font-normal leading-relaxed">
+            Kami adalah studio rekayasa perangkat lunak independen. Mengembangkan smart contract terverifikasi, aplikasi terdesentralisasi (DApps), integrasi API berkecepatan tinggi, dan infrastruktur web modern tanpa gimmick visual murahan.
+          </p>
+
+          <!-- Metrics Row -->
+          <div class="grid grid-cols-3 gap-4 py-3 border-y border-dark-border font-mono text-xs text-slate-400">
+            <div>
+              <div class="text-white text-base sm:text-lg font-bold">100%</div>
+              <div>Code Auditability</div>
+            </div>
+            <div>
+              <div class="text-emerald-400 text-base sm:text-lg font-bold">&lt; 50ms</div>
+              <div>Avg Latency Target</div>
+            </div>
+            <div>
+              <div class="text-sky-400 text-base sm:text-lg font-bold">Zero</div>
+              <div>AI-Template Clutter</div>
+            </div>
+          </div>
+
+          <!-- CTA Buttons -->
+          <div class="flex flex-wrap items-center gap-4 pt-2">
+            <a href="#projects" class="px-6 py-3 rounded-lg bg-emerald-500 text-slate-950 font-mono font-semibold text-sm hover:bg-emerald-400 transition duration-200 flex items-center shadow-lg shadow-emerald-500/10">
+              Lihat Hasil Karya
+              <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </a>
+
+            <a href="https://github.com/eLgorythm" target="_blank" rel="noopener noreferrer" class="px-6 py-3 rounded-lg bg-dark-card border border-dark-border text-slate-300 font-mono text-sm hover:bg-dark-hover hover:text-white transition duration-200 flex items-center gap-2">
+              <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+              <span>[ GitHub / eLgorythm ]</span>
+            </a>
+
+            <a href="CV.pdf" download="CV.pdf" class="px-6 py-3 rounded-lg bg-sky-500/10 border border-sky-500/30 text-sky-400 font-mono text-sm hover:bg-sky-500 hover:text-black transition duration-200 flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+              <span>[ Profil PDF ]</span>
+            </a>
+          </div>
+
+        </div>
+
+        <!-- Hero Interactive Code/Terminal Widget -->
+        <div class="lg:col-span-5">
+          <div class="bg-[#0b0d14] rounded-xl border border-dark-border shadow-2xl overflow-hidden font-mono text-xs">
+            
+            <!-- Terminal Header -->
+            <div class="bg-[#141824] px-4 py-2.5 border-b border-dark-border flex items-center justify-between">
+              <div class="flex items-center space-x-2">
+                <div class="w-3 h-3 rounded-full bg-rose-500/80"></div>
+                <div class="w-3 h-3 rounded-full bg-amber-500/80"></div>
+                <div class="w-3 h-3 rounded-full bg-emerald-500/80"></div>
+                <span class="ml-2 text-slate-400 text-[11px]">0xfnd_boot.log</span>
+              </div>
+              <span class="text-slate-500 text-[10px]">welcome session</span>
+            </div>
+
+            <!-- Code Display Area -->
+            <div id="terminal-body" class="p-4 overflow-x-auto text-slate-300 leading-relaxed min-h-[260px] scanline">
+              <div id="term-log" class="hidden space-y-1.5 text-[11px] leading-relaxed max-h-72 overflow-y-auto"></div>
+            </div>
+
+            <!-- Terminal Footer Live Status -->
+            <div class="bg-[#0e1019] px-4 py-2 border-t border-dark-border flex items-center justify-between text-[11px]">
+              <div id="term-status" class="flex items-center space-x-2 text-slate-400">
+                <span class="inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>Welcome sequence ready</span>
+              </div>
+              <button id="term-replay" onclick="playSequence()" class="text-slate-500 hover:text-emerald-400 font-bold px-2 py-0.5 rounded border border-dark-border hover:border-emerald-500/30 transition">
+                ↻ REPLAY
+              </button>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Profile / Identitas Section -->
+  <section id="profile" class="py-16 border-t border-dark-border bg-dark-bg/60">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+
+        <!-- Profil Kiri -->
+        <div class="lg:col-span-7 space-y-5">
+          <span class="font-mono text-xs text-emerald-400 tracking-wider uppercase font-semibold">// IDENTITAS & PROFIL</span>
+          <h2 class="text-2xl sm:text-3xl font-bold text-white">Elfan Dwi Saputra</h2>
+          <p class="text-slate-500 font-mono text-xs">SOFTWARE ENGINEER · SERVER ADMINISTRATOR · SECURITY RESEARCHER · INDONESIA</p>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            Berakar di Solidity, Linux, dan jaringan — dari smart contract architecture sampai administrasi server produksi dan penetration testing terotorisasi. Membangun 0xFND Labs untuk menyatukan engineering web3, keamanan sistem, dan otomasi infrastruktur dalam satu studio independen.
+          </p>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            Fokus harian: audit smart contract, hardening server, pengembangan fullstack, serta riset eksploitasi & keamanan untuk sistem yang benar-benar layak produksi.
+          </p>
+
+          <div class="flex flex-wrap gap-2 font-mono text-[11px]">
+            <span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-full">Solidity</span>
+            <span class="bg-sky-500/10 text-sky-400 border border-sky-500/30 px-2.5 py-1 rounded-full">Rust</span>
+            <span class="bg-amber-500/10 text-amber-400 border border-amber-500/30 px-2.5 py-1 rounded-full">Linux / Server Admin</span>
+            <span class="bg-rose-500/10 text-rose-400 border border-rose-500/30 px-2.5 py-1 rounded-full">Penetration Testing</span>
+            <span class="bg-violet-500/10 text-violet-400 border border-violet-500/30 px-2.5 py-1 rounded-full">Smart Contract Audit</span>
+            <span class="bg-slate-500/10 text-slate-300 border border-slate-500/30 px-2.5 py-1 rounded-full">Fullstack Web</span>
+            <span class="bg-slate-500/10 text-slate-300 border border-slate-500/30 px-2.5 py-1 rounded-full">DevOps / IaC</span>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-3 pt-2 font-mono text-xs">
+            <a href="CV.pdf" download="CV.pdf" class="px-5 py-2.5 rounded-lg bg-sky-500/10 border border-sky-500/30 text-sky-400 hover:bg-sky-500 hover:text-black transition duration-200 flex items-center gap-2">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+              <span>[ Lihat CV PDF ]</span>
+            </a>
+            <a href="https://github.com/eLgorythm" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 rounded-lg bg-dark-card border border-dark-border text-slate-300 hover:bg-dark-hover hover:text-white transition duration-200 flex items-center gap-2">
+              <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+              <span>github.com/eLgorythm</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Stat / Info Cards Kanan -->
+        <div class="lg:col-span-5 grid grid-cols-2 gap-4">
+          <div class="bg-dark-card border border-dark-border rounded-xl p-5 border-glow">
+            <div class="font-mono text-[10px] text-slate-500 uppercase tracking-wider">Role Utama</div>
+            <div class="mt-1 text-sm font-bold text-white leading-snug">Software Engineer<br>Web3 & Backend</div>
+          </div>
+          <div class="bg-dark-card border border-dark-border rounded-xl p-5 border-glow">
+            <div class="font-mono text-[10px] text-slate-500 uppercase tracking-wider">Sistem</div>
+            <div class="mt-1 text-sm font-bold text-white leading-snug">Linux Admin<br>Servers & Cloud</div>
+          </div>
+          <div class="bg-dark-card border border-dark-border rounded-xl p-5 border-glow">
+            <div class="font-mono text-[10px] text-slate-500 uppercase tracking-wider">Keamanan</div>
+            <div class="mt-1 text-sm font-bold text-white leading-snug">Pentest &<br>Audit Smart Contract</div>
+          </div>
+          <div class="bg-dark-card border border-dark-border rounded-xl p-5 border-glow">
+            <div class="font-mono text-[10px] text-slate-500 uppercase tracking-wider">Basis</div>
+            <div class="mt-1 text-sm font-bold text-white leading-snug">Indonesia<br>Remote Worldwide</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Education / Riwayat Pendidikan Section -->
+  <section id="education" class="py-16 border-t border-dark-border bg-[#0a0c13]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <div class="text-center max-w-2xl mx-auto mb-10">
+        <span class="font-mono text-xs text-emerald-400 tracking-wider uppercase font-semibold">// RIWAYAT PENDIDIKAN</span>
+        <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Jejak Akademik</h2>
+      </div>
+
+      <div class="max-w-3xl mx-auto">
+        <ol class="relative border-l border-dark-border ml-3 space-y-8">
+
+          <li class="ml-6">
+            <span class="absolute -left-1.5 mt-1 w-3 h-3 rounded-full bg-emerald-400 border-2 border-dark-bg"></span>
+            <div class="flex items-center gap-3 font-mono text-[11px] text-slate-500">
+              <span>📘</span><span class="text-emerald-400 font-bold">STRATA-1</span>
+              <span class="text-slate-600">2022 - 2027</span>
+            </div>
+            <h3 class="text-lg font-bold text-white mt-1">Universitas Sains Al-Qur'an (UNSIQ) — Wonosobo</h3>
+            <p class="text-slate-400 text-sm mt-1">Prodi Teknik Informatika, Fakultas Teknik dan Ilmu Komputer. Menempuh pendidikan sarjana di tengah pengembangan proyek Web3, keamanan sistem, dan administrasi infrastruktur.</p>
+          </li>
+
+          <li class="ml-6">
+            <span class="absolute -left-1.5 mt-1 w-3 h-3 rounded-full bg-amber-400 border-2 border-dark-bg"></span>
+            <div class="flex items-center gap-3 font-mono text-[11px] text-slate-500">
+              <span>🎓</span><span class="text-amber-400 font-bold">SMK</span>
+              <span class="text-slate-600">2019 - 2022</span>
+            </div>
+            <h3 class="text-lg font-bold text-white mt-1">SMK Al-Fatah — Banjarnegara</h3>
+            <p class="text-slate-400 text-sm mt-1">Jurusan Rekayasa Perangkat Lunak (RPL). Menyelesaikan pendidikan menengah kejuruan setelah pindah dari SMKN 1 Purbalingga.</p>
+          </li>
+
+          <li class="ml-6">
+            <span class="absolute -left-1.5 mt-1 w-3 h-3 rounded-full bg-sky-400 border-2 border-dark-bg"></span>
+            <div class="flex items-center gap-3 font-mono text-[11px] text-slate-500">
+              <span>📗</span><span class="text-sky-400 font-bold">SMP</span>
+              <span class="text-slate-600">2016 - 2019</span>
+            </div>
+            <h3 class="text-lg font-bold text-white mt-1">SMPN 2 — Purbalingga</h3>
+            <p class="text-slate-400 text-sm mt-1">Pendidikan menengah pertama.</p>
+          </li>
+
+          <li class="ml-6">
+            <span class="absolute -left-1.5 mt-1 w-3 h-3 rounded-full bg-violet-400 border-2 border-dark-bg"></span>
+            <div class="flex items-center gap-3 font-mono text-[11px] text-slate-500">
+              <span>📕</span><span class="text-violet-400 font-bold">SD</span>
+              <span class="text-slate-600">2010 - 2016</span>
+            </div>
+            <h3 class="text-lg font-bold text-white mt-1">SDN 2 — Muntang</h3>
+            <p class="text-slate-400 text-sm mt-1">Pendidikan dasar.</p>
+          </li>
+
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tech Stack Matrix -->
+  <section id="stack" class="py-16 border-t border-dark-border bg-dark-bg/40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-2xl mx-auto mb-10">
+        <span class="font-mono text-xs text-emerald-400 tracking-wider uppercase font-semibold">// ALAT & FRAMEWORK</span>
+        <h2 class="text-2xl sm:text-3xl font-bold text-white mt-1">Tech Stack Terverifikasi</h2>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 font-mono text-xs">
+        <div class="bg-dark-card border border-dark-border p-3 rounded-lg text-center hover:border-slate-600 transition">
+          <span class="block font-bold text-white">Solidity</span>
+          <span class="text-[10px] text-slate-500">Smart Contracts</span>
+        </div>
+        <div class="bg-dark-card border border-dark-border p-3 rounded-lg text-center hover:border-slate-600 transition">
+          <span class="block font-bold text-white">Rust</span>
+          <span class="text-[10px] text-slate-500">Solana / Protocol</span>
+        </div>
+        <div class="bg-dark-card border border-dark-border p-3 rounded-lg text-center hover:border-slate-600 transition">
+          <span class="block font-bold text-white">Foundry</span>
+          <span class="text-[10px] text-slate-500">Testing & Deploy</span>
+        </div>
+        <div class="bg-dark-card border border-dark-border p-3 rounded-lg text-center hover:border-slate-600 transition">
+          <span class="block font-bold text-white">Next.js 14+</span>
+          <span class="text-[10px] text-slate-500">Frontend App</span>
+        </div>
+        <div class="bg-dark-card border border-dark-border p-3 rounded-lg text-center hover:border-slate-600 transition">
+          <span class="block font-bold text-white">TypeScript</span>
+          <span class="text-[10px] text-slate-500">Type Safety</span>
+        </div>
+        <div class="bg-dark-card border border-dark-border p-3 rounded-lg text-center hover:border-slate-600 transition">
+          <span class="block font-bold text-white">Viem / Wagmi</span>
+          <span class="text-[10px] text-slate-500">EVM Connectors</span>
+        </div>
+        <div class="bg-dark-card border border-dark-border p-3 rounded-lg text-center hover:border-slate-600 transition">
+          <span class="block font-bold text-white">Tailwind CSS</span>
+          <span class="text-[10px] text-slate-500">UI Architecture</span>
+        </div>
+        <div class="bg-dark-card border border-dark-border p-3 rounded-lg text-center hover:border-slate-600 transition">
+          <span class="block font-bold text-white">Node.js</span>
+          <span class="text-[10px] text-slate-500">Microservices</span>
+        </div>
+        <div class="bg-dark-card border border-dark-border p-3 rounded-lg text-center hover:border-slate-600 transition">
+          <span class="block font-bold text-white">PostgreSQL</span>
+          <span class="text-[10px] text-slate-500">Relational DB</span>
+        </div>
+        <div class="bg-dark-card border border-dark-border p-3 rounded-lg text-center hover:border-slate-600 transition">
+          <span class="block font-bold text-white">Redis</span>
+          <span class="text-[10px] text-slate-500">High Speed Cache</span>
+        </div>
+        <div class="bg-dark-card border border-dark-border p-3 rounded-lg text-center hover:border-slate-600 transition">
+          <span class="block font-bold text-white">Docker</span>
+          <span class="text-[10px] text-slate-500">Containerization</span>
+        </div>
+        <div class="bg-dark-card border border-dark-border p-3 rounded-lg text-center hover:border-slate-600 transition">
+          <span class="block font-bold text-white">GraphQL</span>
+          <span class="text-[10px] text-slate-500">API Indexing</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Services Grid Section -->
+  <section id="services" class="py-16 border-t border-dark-border bg-dark-bg/60">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Section Header -->
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+        <div>
+          <span class="font-mono text-xs text-emerald-400 tracking-wider uppercase font-semibold">// SPEKTRUM KEAHLIAN</span>
+          <h2 class="text-2xl sm:text-4xl font-bold text-white mt-1">Layanan Rekayasa Sistem</h2>
+        </div>
+        <p class="text-slate-400 text-sm max-w-md mt-3 md:mt-0 font-normal">
+          Setiap baris kode dirancang untuk kehandalan tinggi, keamanan maksimal, dan kemudahan skalabilitas.
+        </p>
+      </div>
+
+      <!-- Services Cards Container -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <!-- Card 1 -->
+        <div class="bg-dark-card border border-dark-border p-6 rounded-xl border-glow flex flex-col justify-between">
+          <div>
+            <div class="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-mono font-bold mb-4">
+              01
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Smart Contract Architecture</h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-4">
+              Pengembangan smart contract EVM (Solidity) & Solana (Rust). Optimasi biaya Gas, penerapan standar ERC-20/721/1155, dan protokol DeFi terspesialisasi.
+            </p>
+          </div>
+          <div class="pt-4 border-t border-dark-border/60 flex items-center justify-between font-mono text-xs text-slate-500">
+            <span>Tech: Solidity, Foundry, Hardhat</span>
+            <span class="text-emerald-400">Gas-Optimized</span>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="bg-dark-card border border-dark-border p-6 rounded-xl border-glow flex flex-col justify-between">
+          <div>
+            <div class="w-10 h-10 rounded-lg bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-400 font-mono font-bold mb-4">
+              02
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Fullstack Web3 & DApp Engineering</h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-4">
+              Antarmuka web modern dengan Next.js, Tailwind CSS, Wagmi/Viem, dan Ethers.js. Koneksi wallet seamless, UX responsif, dan state management instan.
+            </p>
+          </div>
+          <div class="pt-4 border-t border-dark-border/60 flex items-center justify-between font-mono text-xs text-slate-500">
+            <span>Tech: React, Next.js, Viem, Wagmi</span>
+            <span class="text-sky-400">Sub-second UX</span>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="bg-dark-card border border-dark-border p-6 rounded-xl border-glow flex flex-col justify-between">
+          <div>
+            <div class="w-10 h-10 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 font-mono font-bold mb-4">
+              03
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Telegram Mini Apps & Bots</h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-4">
+              Pengembangan ekosistem Telegram WebApp (TMA) terintegrasi dengan TON / EVM Wallet, backend high-concurrency, dan arsitektur microservices.
+            </p>
+          </div>
+          <div class="pt-4 border-t border-dark-border/60 flex items-center justify-between font-mono text-xs text-slate-500">
+            <span>Tech: Node.js, Telegram API, TON</span>
+            <span class="text-amber-400">High Speed</span>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="bg-dark-card border border-dark-border p-6 rounded-xl border-glow flex flex-col justify-between">
+          <div>
+            <div class="w-10 h-10 rounded-lg bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400 font-mono font-bold mb-4">
+              04
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Security Audit & Code Review</h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-4">
+              Analisis celah keamanan, reentrancy attacks, front-running mitigation, dan audit arsitektur sistem sebelum perilisan produk ke mainnet.
+            </p>
+          </div>
+          <div class="pt-4 border-t border-dark-border/60 flex items-center justify-between font-mono text-xs text-slate-500">
+            <span>Tools: Slither, Mythril, Manual</span>
+            <span class="text-purple-400">Zero Exploit</span>
+          </div>
+        </div>
+
+        <!-- Card 5 -->
+        <div class="bg-dark-card border border-dark-border p-6 rounded-xl border-glow flex flex-col justify-between">
+          <div>
+            <div class="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-mono font-bold mb-4">
+              05
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">API Infrastructure & Indexing</h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-4">
+              Custom GraphQL/REST Indexer untuk membaca data blockchain dengan latency rendah, caching layer Redis, dan arsitektur database terdistribusi.
+            </p>
+          </div>
+          <div class="pt-4 border-t border-dark-border/60 flex items-center justify-between font-mono text-xs text-slate-500">
+            <span>Tech: GraphQL, PostgreSQL, Redis</span>
+            <span class="text-emerald-400">99.9% Uptime</span>
+          </div>
+        </div>
+
+        <!-- Card 6 -->
+        <div class="bg-dark-card border border-dark-border p-6 rounded-xl border-glow flex flex-col justify-between">
+          <div>
+            <div class="w-10 h-10 rounded-lg bg-rose-500/10 border border-rose-500/30 flex items-center justify-center text-rose-400 font-mono font-bold mb-4">
+              06
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">Custom Brand Web Platforms</h3>
+            <p class="text-slate-400 text-sm leading-relaxed mb-4">
+              Landing page presisi tinggi, dashboard analitik eksekutif, dan platform SaaS khusus untuk Web3 protocols, NFT projects, dan tech startups.
+            </p>
+          </div>
+          <div class="pt-4 border-t border-dark-border/60 flex items-center justify-between font-mono text-xs text-slate-500">
+            <span>Tech: Next.js, Tailwind, TypeScript</span>
+            <span class="text-rose-400">Pixel-Perfect</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Interactive Project Showcase Section -->
+  <section id="projects" class="py-20 border-t border-dark-border bg-[#0a0c13]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="text-center max-w-3xl mx-auto mb-12">
+        <span class="font-mono text-xs text-emerald-400 tracking-wider uppercase font-semibold">// PORTFOLIO & PROTOTYPES</span>
+        <h2 class="text-3xl font-extrabold text-white mt-1">Showcase Proyek Studio</h2>
+        <p class="text-slate-400 text-sm mt-2">
+          Eksplorasi sampel arsitektur dan produk yang kami kembangkan dengan standar teknis industri Web3.
+        </p>
+      </div>
+
+      <!-- Filter Tabs -->
+      <div class="flex flex-wrap items-center justify-center gap-2 mb-10 font-mono text-xs">
+        <button onclick="filterShowcase('all')" id="btn-showcase-all" class="px-4 py-2 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">Semua Proyek</button>
+        <button onclick="filterShowcase('apps')" id="btn-showcase-apps" class="px-4 py-2 rounded-lg bg-dark-card text-slate-400 border border-dark-border hover:text-white">Apps & Sistem</button>
+        <button onclick="filterShowcase('web3')" id="btn-showcase-web3" class="px-4 py-2 rounded-lg bg-dark-card text-slate-400 border border-dark-border hover:text-white">Web3 & DApps</button>
+        <button onclick="filterShowcase('tools')" id="btn-showcase-tools" class="px-4 py-2 rounded-lg bg-dark-card text-slate-400 border border-dark-border hover:text-white">Dev Tools & APIs</button>
+      </div>
+
+      <!-- Showcase Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <!-- Project 1 -->
+        <a href="https://github.com/eLgorythm/sadaya-ksu" target="_blank" rel="noopener noreferrer" data-preview="sadaya.png" class="showcase-item apps bg-dark-card border border-dark-border rounded-xl overflow-hidden hover:border-sky-500/40 transition duration-300 group cursor-pointer">
+          <div class="aspect-video overflow-hidden bg-[#141824] border-b border-dark-border">
+            <img src="sadaya.png" alt="SADAYA — Sistem Informasi Koperasi" class="w-full h-full object-cover object-top group-hover:scale-105 transition duration-500">
+          </div>
+          <div class="showcase-wide-preview" aria-hidden="true">
+            <img src="sadaya.png" alt="SADAYA preview lebar">
+            <div class="swp-cap">
+              <span><b>SADAYA</b> — Sistem Informasi Koperasi KSU</span>
+              <span>github.com/eLgorythm/sadaya-ksu</span>
+            </div>
+          </div>
+          <div class="bg-[#141824] p-4 border-b border-dark-border flex justify-between items-center font-mono text-xs">
+            <span class="text-sky-400">01 // SISTEM INFORMASI KOPERASI</span>
+            <span class="text-slate-500">Production</span>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-white mb-2">SADAYA — Koperasi KSU</h3>
+            <p class="text-slate-400 text-sm mb-4">
+              Aplikasi manajemen koperasi 16 modul dengan jurnal double-entry otomatis dan neraca real-time yang selalu seimbang.
+            </p>
+            <div class="flex flex-wrap gap-2 font-mono text-[11px] text-slate-300">
+              <span class="bg-slate-800 px-2 py-0.5 rounded border border-white/5">Flutter</span>
+              <span class="bg-slate-800 px-2 py-0.5 rounded border border-white/5">Supabase</span>
+              <span class="bg-slate-800 px-2 py-0.5 rounded border border-white/5">PostgreSQL</span>
+              <span class="bg-slate-800 px-2 py-0.5 rounded border border-white/5">Bloc</span>
+            </div>
+            <div class="mt-4 font-mono text-[11px] text-sky-400 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition">
+              <span>Buka Repositori</span>
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+            </div>
+          </div>
+        </a>
+
+        <!-- Project 2 -->
+        <a href="https://github.com/eLgorythm/Stellar" target="_blank" rel="noopener noreferrer" class="showcase-item apps bg-dark-card border border-dark-border rounded-xl overflow-hidden hover:border-violet-500/40 transition duration-300 group cursor-pointer">
+          <div class="grid grid-cols-3 gap-px bg-dark-border">
+            <img src="stellar_home.jpg" alt="Stellar — layar utama" class="aspect-[3/4] w-full object-cover object-top group-hover:scale-105 transition duration-500">
+            <img src="stellar1.jpg" alt="Stellar — gacha scanner" class="aspect-[3/4] w-full object-cover object-top group-hover:scale-105 transition duration-500">
+            <img src="stellar2.jpg" alt="Stellar — pity counter" class="aspect-[3/4] w-full object-cover object-top group-hover:scale-105 transition duration-500">
+          </div>
+          <div class="showcase-wide-preview" aria-hidden="true">
+            <div class="grid grid-cols-3 gap-px bg-dark-border">
+              <img src="stellar_home.jpg" alt="Stellar layar utama">
+              <img src="stellar1.jpg" alt="Stellar gacha scanner">
+              <img src="stellar2.jpg" alt="Stellar pity counter">
+            </div>
+            <div class="swp-cap">
+              <span><b>STELLAR</b> — Gacha Scanner & Pity Counter</span>
+              <span>github.com/eLgorythm/Stellar</span>
+            </div>
+          </div>
+          <div class="bg-[#141824] p-4 border-b border-dark-border flex justify-between items-center font-mono text-xs">
+            <span class="text-violet-400">02 // ANDROID UTILITY</span>
+            <span class="text-slate-500">Open Source</span>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-white mb-2">Stellar — Gacha Scanner & Pity Counter</h3>
+            <p class="text-slate-400 text-sm mb-4">
+              Aplikasi Android untuk mengekstrak link gacha HoYoverse via ADB Wireless tanpa root, import wish history lokal, dan track pity per banner (Genshin, HSR, ZZZ).
+            </p>
+            <div class="flex flex-wrap gap-2 font-mono text-[11px] text-slate-300">
+              <span class="bg-slate-800 px-2 py-0.5 rounded border border-white/5">Flutter</span>
+              <span class="bg-slate-800 px-2 py-0.5 rounded border border-white/5">Rust</span>
+              <span class="bg-slate-800 px-2 py-0.5 rounded border border-white/5">ADB</span>
+              <span class="bg-slate-800 px-2 py-0.5 rounded border border-white/5">FRB</span>
+            </div>
+            <div class="mt-4 font-mono text-[11px] text-violet-400 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition">
+              <span>Buka Repositori</span>
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+            </div>
+          </div>
+        </a>
+
+        <!-- Project 3 -->
+        <a href="https://github.com/eLgorythm/obscura" target="_blank" rel="noopener noreferrer" class="showcase-item tools bg-dark-card border border-dark-border rounded-xl overflow-hidden hover:border-emerald-500/40 transition duration-300 group cursor-pointer">
+          <div class="overflow-hidden">
+            <img src="obscura.png" alt="Obscura — web shell generator" class="aspect-[16/9] w-full object-cover object-top group-hover:scale-105 transition duration-500">
+          </div>
+          <div class="showcase-wide-preview" aria-hidden="true">
+            <img src="obscura.png" alt="Obscura antarmuka">
+            <div class="swp-cap">
+              <span><b>OBSCURA</b> — Web Shell Generator</span>
+              <span>github.com/eLgorythm/obscura</span>
+            </div>
+          </div>
+          <div class="bg-[#141824] p-4 border-b border-dark-border flex justify-between items-center font-mono text-xs">
+            <span class="text-emerald-400">03 // SECURITY RESEARCH</span>
+            <span class="text-slate-500">Open Source</span>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-white mb-2">Obscura — Interactive Web Shell</h3>
+            <p class="text-slate-400 text-sm mb-4">
+              Generator & manajemen web shell interaktif untuk pengujian keamanan terotorisasi — payload minimal sel 500B, 5 teknik obfuscation, dan TTY spawner penuh.
+            </p>
+            <div class="flex flex-wrap gap-2 font-mono text-[11px] text-slate-300">
+              <span class="bg-slate-800 px-2 py-0.5 rounded border border-white/5">Python</span>
+              <span class="bg-slate-800 px-2 py-0.5 rounded border border-white/5">CLI</span>
+              <span class="bg-slate-800 px-2 py-0.5 rounded border border-white/5">Obfuscation</span>
+            </div>
+            <div class="mt-4 font-mono text-[11px] text-emerald-400 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition">
+              <span>Buka Repositori</span>
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+            </div>
+          </div>
+        </a>
+
+        <!-- Project 4 -->
+        <a href="https://github.com/eLgorythm/csrf-poc-generator" target="_blank" rel="noopener noreferrer" class="showcase-item tools bg-dark-card border border-dark-border rounded-xl overflow-hidden hover:border-amber-500/40 transition duration-300 group cursor-pointer">
+          <div class="overflow-hidden">
+            <img src="csrf-poc-generator.png" alt="CSRF Online PoC Builder" class="aspect-[16/9] w-full object-cover object-top group-hover:scale-105 transition duration-500">
+          </div>
+          <div class="showcase-wide-preview" aria-hidden="true">
+            <img src="csrf-poc-generator.png" alt="CSRF PoC Builder antarmuka">
+            <div class="swp-cap">
+              <span><b>CSRF ONLINE</b> — PoC Builder</span>
+              <span>github.com/eLgorythm/csrf-poc-generator</span>
+            </div>
+          </div>
+          <div class="bg-[#141824] p-4 border-b border-dark-border flex justify-between items-center font-mono text-xs">
+            <span class="text-amber-400">04 // WEB SECURITY</span>
+            <span class="text-slate-500">Deployed</span>
+          </div>
+          <div class="p-6">
+            <h3 class="text-xl font-bold text-white mb-2">CSRF Online — PoC Builder</h3>
+            <p class="text-slate-400 text-sm mb-4">
+              Generator Proof-of-Concept CSRF dalam satu file index.php dengan UI glassmorphism — dynamic request builder, 6 metode, dual mode form & fetch, escape XSS aman.
+            </p>
+            <div class="flex flex-wrap gap-2 font-mono text-[11px] text-slate-300">
+              <span class="bg-slate-800 px-2 py-0.5 rounded border border-white/5">PHP</span>
+              <span class="bg-slate-800 px-2 py-0.5 rounded border border-white/5">Vanilla JS</span>
+              <span class="bg-slate-800 px-2 py-0.5 rounded border border-white/5">CSRF</span>
+            </div>
+            <div class="mt-4 font-mono text-[11px] text-amber-400 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition">
+              <span>Buka Repositori</span>
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+            </div>
+          </div>
+        </a>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Engineering Manifesto -->
+  <section id="manifesto" class="py-20 border-t border-dark-border bg-[#0a0c13]">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="border border-dark-border bg-dark-card p-8 sm:p-12 rounded-2xl relative">
+        <div class="font-mono text-xs text-emerald-400 mb-2 font-semibold">// MANIFESTO KAMI</div>
+        <h2 class="text-2xl sm:text-3xl font-extrabold text-white mb-6">Prinsip Rekayasa 0xFND Labs</h2>
+        
+        <div class="space-y-4 text-slate-300 text-sm leading-relaxed font-sans">
+          <p class="flex items-start">
+            <span class="font-mono text-emerald-400 font-bold mr-3">01.</span>
+            <span><strong class="text-white">Bukan Sekadar Tampilan, tapi Keamanan Utama:</strong> Dalam dunia Web3 dan perangkat lunak terdistribusi, tampilan menarik tidak ada artinya jika smart contract Anda rentan terhadap exploit. Kami menempatkan integritas kode di posisi tertinggi.</span>
+          </p>
+          <p class="flex items-start">
+            <span class="font-mono text-emerald-400 font-bold mr-3">02.</span>
+            <span><strong class="text-white">Tanpa Template Murahan:</strong> Kami tidak menggunakan template AI umum yang berisikan bloatware. Setiap arsitektur yang kami bangun dibuat dengan efisiensi tinggi dan struktur yang rapi.</span>
+          </p>
+          <p class="flex items-start">
+            <span class="font-mono text-emerald-400 font-bold mr-3">03.</span>
+            <span><strong class="text-white">Transparansi dan Dokumentasi Komprehensif:</strong> Setiap repositori yang diserahkan dilengkapi dokumentasi teknis, instruksi deployment, serta unit-test suit yang jelas.</span>
+          </p>
+        </div>
+
+        <div class="mt-8 pt-6 border-t border-dark-border flex items-center justify-between font-mono text-xs text-slate-500">
+          <span>SIGNED: 0xFND LABS CORE TEAM</span>
+          <span class="text-emerald-400">VERIFIED DOMAIN // 0xfndlabs.my.id</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Contact & Terminal Footer -->
+  <section id="contact" class="py-20 border-t border-dark-border bg-dark-bg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        
+        <!-- Contact Info -->
+        <div class="lg:col-span-5 space-y-6">
+          <span class="font-mono text-xs text-emerald-400 tracking-wider uppercase font-semibold">// INITIATE CONNECTION</span>
+          <h2 class="text-3xl font-extrabold text-white">Mulai Diskusi Teknis</h2>
+          <p class="text-slate-400 text-sm leading-relaxed">
+            Punya ide proyek Web3, kebutuhan Smart Contract Audit, atau ingin membangun platform web berkecepatan tinggi? Kirimkan pesan singkat atau deskripsi lingkup proyek Anda.
+          </p>
+
+          <div class="space-y-3 font-mono text-xs">
+            <div class="flex items-center space-x-3 text-slate-300">
+              <span class="w-8 h-8 rounded bg-slate-900 border border-dark-border flex items-center justify-center text-emerald-400">🌐</span>
+              <div>
+                <div class="text-slate-500">Official Domain</div>
+                <div class="text-white font-bold">0xfndlabs.my.id</div>
+              </div>
+            </div>
+
+            <div class="flex items-center space-x-3 text-slate-300">
+              <span class="w-8 h-8 rounded bg-slate-900 border border-dark-border flex items-center justify-center text-sky-400">💬</span>
+              <div>
+                <div class="text-slate-500">Telegram / Discord</div>
+                <div class="text-white font-bold">@0xfndlabs</div>
+              </div>
+            </div>
+
+            <div class="flex items-center space-x-3 text-slate-300">
+              <span class="w-8 h-8 rounded bg-slate-900 border border-dark-border flex items-center justify-center text-amber-400">⚡</span>
+              <div>
+                <div class="text-slate-500">Response Time</div>
+                <div class="text-emerald-400 font-bold">&lt; 12 Jam Kerja</div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Contact Form Box -->
+        <div class="lg:col-span-7">
+          <form onsubmit="handleFormSubmit(event)" class="bg-dark-card border border-dark-border p-6 sm:p-8 rounded-xl space-y-4 font-mono text-xs">
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-slate-400 mb-1">NAMA / ENTITAS *</label>
+                <input type="text" required placeholder="Satoshi N." class="w-full bg-[#0b0c12] border border-dark-border rounded px-3 py-2.5 text-white focus:outline-none focus:border-emerald-500 transition">
+              </div>
+              <div>
+                <label class="block text-slate-400 mb-1">EMAIL / TELEGRAM *</label>
+                <input type="text" required placeholder="contact@domain.com atau @username" class="w-full bg-[#0b0c12] border border-dark-border rounded px-3 py-2.5 text-white focus:outline-none focus:border-emerald-500 transition">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-slate-400 mb-1">KATEGORI PROYEK</label>
+              <select class="w-full bg-[#0b0c12] border border-dark-border rounded px-3 py-2.5 text-white focus:outline-none focus:border-emerald-500 transition">
+                <option>Smart Contract & Protocol Development</option>
+                <option>Telegram Mini App (TMA)</option>
+                <option>Fullstack Web3 DApp</option>
+                <option>Smart Contract Security Audit</option>
+                <option>Lainnya / Konsultasi Umum</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-slate-400 mb-1">DESKRIPSI PROYEK & ANGGARAN ESTIMASI</label>
+              <textarea rows="4" required placeholder="Jelaskan kebutuhan teknis singkat, target timeline, dan ekspektasi Anda..." class="w-full bg-[#0b0c12] border border-dark-border rounded px-3 py-2.5 text-white focus:outline-none focus:border-emerald-500 transition"></textarea>
+            </div>
+
+            <button type="submit" class="w-full py-3 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold rounded transition flex items-center justify-center space-x-2">
+              <span>KIRIM PESAN DIREKSI</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+            </button>
+
+            <!-- Status Feedback Message -->
+            <div id="form-status" class="hidden p-3 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[11px] text-center">
+              ✓ Pesan Anda telah diterima dalam antrean sistem 0xFND Labs. Tim kami akan menghubungi Anda sesegera mungkin.
+            </div>
+
+          </form>
+        </div>
+
+      </div>
+
+      <!-- Bottom Footer Info -->
+      <div class="mt-16 pt-8 border-t border-dark-border flex flex-col md:flex-row items-center justify-between font-mono text-xs text-slate-500 gap-4">
+        <div>
+          © 2026 <span class="text-white font-bold">0xFND Labs</span> (0xfndlabs.my.id). Hak Cipta Dilindungi.
+        </div>
+        <div class="flex items-center space-x-6">
+          <a href="https://github.com/eLgorythm" target="_blank" rel="noopener noreferrer" class="text-emerald-400 hover:text-emerald-300 font-bold transition flex items-center gap-1">
+            <span>GitHub (@eLgorythm)</span>
+          </a>
+          <a href="CV.pdf" download="CV.pdf" class="hover:text-emerald-400 transition">Profil PDF</a>
+          <a href="#" class="hover:text-emerald-400 transition">Telegram</a>
+          <a href="#" class="hover:text-emerald-400 transition">Twitter / X</a>
+          <a href="#" class="hover:text-emerald-400 transition">Security Policy</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Command Palette Modal (Cmd+K) -->
+  <div id="cmd-palette" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-start justify-center pt-20 px-4">
+    <div class="bg-dark-card border border-dark-border w-full max-w-xl rounded-xl shadow-2xl overflow-hidden font-mono text-xs">
+      
+      <!-- Search Input Header -->
+      <div class="p-3 border-b border-dark-border flex items-center space-x-2 bg-[#0d0f17]">
+        <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+        <input type="text" id="cmd-input" onkeyup="filterCommandList()" placeholder="Ketik perintah atau navigasi (misal: Layanan, GitHub, Domain)..." class="w-full bg-transparent text-white focus:outline-none text-xs">
+        <button onclick="toggleCommandPalette()" class="text-slate-500 hover:text-white px-1.5 py-0.5 rounded bg-slate-800">ESC</button>
+      </div>
+
+      <!-- Quick Commands List -->
+      <div id="cmd-list" class="p-2 space-y-1 max-h-64 overflow-y-auto">
+        <a href="#profile" onclick="toggleCommandPalette()" class="cmd-item flex items-center justify-between p-2 rounded hover:bg-emerald-500/10 hover:text-emerald-400 text-slate-300">
+          <span>Navigasi: Profil Personal</span>
+          <span class="text-[10px] text-slate-500">#profile</span>
+        </a>
+        <a href="#education" onclick="toggleCommandPalette()" class="cmd-item flex items-center justify-between p-2 rounded hover:bg-emerald-500/10 hover:text-emerald-400 text-slate-300">
+          <span>Navigasi: Riwayat Pendidikan</span>
+          <span class="text-[10px] text-slate-500">#education</span>
+        </a>
+        <a href="#stack" onclick="toggleCommandPalette()" class="cmd-item flex items-center justify-between p-2 rounded hover:bg-emerald-500/10 hover:text-emerald-400 text-slate-300">
+          <span>Navigasi: Tech Stack Terverifikasi</span>
+          <span class="text-[10px] text-slate-500">#stack</span>
+        </a>
+        <a href="#services" onclick="toggleCommandPalette()" class="cmd-item flex items-center justify-between p-2 rounded hover:bg-emerald-500/10 hover:text-emerald-400 text-slate-300">
+          <span>Navigasi: Layanan Engineering</span>
+          <span class="text-[10px] text-slate-500">#services</span>
+        </a>
+        <a href="#projects" onclick="toggleCommandPalette()" class="cmd-item flex items-center justify-between p-2 rounded hover:bg-emerald-500/10 hover:text-emerald-400 text-slate-300">
+          <span>Navigasi: Portfolio Showcase</span>
+          <span class="text-[10px] text-slate-500">#projects</span>
+        </a>
+        <a href="https://github.com/eLgorythm" target="_blank" rel="noopener noreferrer" onclick="toggleCommandPalette()" class="cmd-item flex items-center justify-between p-2 rounded hover:bg-emerald-500/10 hover:text-emerald-400 text-slate-300">
+          <span>External: Buka Profil GitHub (@eLgorythm)</span>
+          <span class="text-[10px] text-emerald-400">github.com/eLgorythm</span>
+        </a>
+        <a href="#manifesto" onclick="toggleCommandPalette()" class="cmd-item flex items-center justify-between p-2 rounded hover:bg-emerald-500/10 hover:text-emerald-400 text-slate-300">
+          <span>Navigasi: Manifesto Engineering</span>
+          <span class="text-[10px] text-slate-500">#manifesto</span>
+        </a>
+        <a href="CV.pdf" download="CV.pdf" onclick="toggleCommandPalette()" class="cmd-item flex items-center justify-between p-2 rounded hover:bg-emerald-500/10 hover:text-emerald-400 text-slate-300">
+          <span>Unduh Profil / CV (PDF)</span>
+          <span class="text-[10px] text-sky-400">.pdf</span>
+        </a>
+        <a href="#contact" onclick="toggleCommandPalette()" class="cmd-item flex items-center justify-between p-2 rounded hover:bg-emerald-500/10 hover:text-emerald-400 text-slate-300">
+          <span>Aksi: Ajukan Diskusi / Konsultasi</span>
+          <span class="text-[10px] text-slate-500">#contact</span>
+        </a>
+        <button onclick="copyDomain(); toggleCommandPalette();" class="cmd-item w-full flex items-center justify-between p-2 rounded hover:bg-emerald-500/10 hover:text-emerald-400 text-slate-300 text-left">
+          <span>Aksi: Salin Domain Offical (0xfndlabs.my.id)</span>
+          <span class="text-[10px] text-emerald-400">Copy Domain</span>
+        </button>
+      </div>
+
+      <!-- Footer Info -->
+      <div class="p-2 border-t border-dark-border bg-[#0a0c13] text-[10px] text-slate-500 flex justify-between">
+        <span>0xFND Labs CLI Shortcuts</span>
+        <span>0xfndlabs.my.id</span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div id="toast" class="fixed bottom-5 right-5 z-50 bg-emerald-500 text-black font-mono text-xs px-4 py-2.5 rounded-lg shadow-xl font-semibold translate-y-20 opacity-0 transition-all duration-300 flex items-center space-x-2">
+    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+    <span id="toast-message">Domain disalin ke clipboard!</span>
+  </div>
+
+  <!-- JavaScript Logic -->
+  <script>
+    // ── Auto Welcome / Intro Sequence ─────────────────────────────────────
+    let sequencePlaying = false;
+
+    const INTRO_SEQUENCE = [
+      { type: 'cmd',    text: '$ boot 0xfnd-labs-os --chain mainnet', delay: 400 },
+      { type: 'info',   text: 'Initializing 0xFND Labs OS...', delay: 350 },
+      { type: 'success', text: 'Kernel modules loaded (24)', delay: 280 },
+      { type: 'info',   text: 'Connecting to 0xfndlabs.my.id...', delay: 380 },
+      { type: 'success', text: 'Handshake OK — TLS 1.3, RTT 12ms', delay: 300 },
+      { type: 'info',   text: 'Chain status: Mainnet ● synced', delay: 300 },
+      { type: 'sep',    text: '─────────────────────────────────────', delay: 400 },
+      { type: 'title',  text: 'Welcome to 0xFND Labs', delay: 300 },
+      { type: 'sub',    text: '> Engineering & Web3 Software Studio', delay: 260 },
+      { type: 'info',   text: '| Region: Indonesia', delay: 240 },
+      { type: 'info',   text: '| Capabilities:', delay: 240 },
+      { type: 'list',   text: '  • Smart Contracts (Solidity, Rust)', delay: 180 },
+      { type: 'list',   text: '  • Fullstack Web3 DApps', delay: 180 },
+      { type: 'list',   text: '  • Telegram Mini Apps & Bots', delay: 180 },
+      { type: 'list',   text: '  • Security Audits & Code Review', delay: 180 },
+      { type: 'sep',    text: '─────────────────────────────────────', delay: 400 },
+      { type: 'success', text: 'Status: Available for Q3/Q4 2026', delay: 380 },
+      { type: 'done',   text: 'Ready.', delay: 320 }
+    ];
+
+    const SEQ_STYLES = {
+      cmd:      'text-sky-300',
+      info:     'text-slate-400',
+      muted:    'text-slate-500',
+      success:  'text-emerald-400',
+      warn:     'text-amber-400',
+      list:     'text-slate-300',
+      sep:      'text-slate-600',
+      title:    'text-white font-bold text-sm',
+      sub:      'text-slate-200',
+      done:     'text-emerald-400 font-bold'
+    };
+
+    function appendTermLine(type, text) {
+      const log = document.getElementById('term-log');
+      const line = document.createElement('div');
+      line.className = 'flex items-start gap-1.5 leading-relaxed break-words';
+
+      let prefix = '';
+      if (type === 'success') prefix = '<span class="text-emerald-400 shrink-0">✓</span>';
+      else if (type === 'done') prefix = '<span class="text-emerald-400 shrink-0">★</span>';
+      else if (type === 'list') prefix = '<span class="text-emerald-400 shrink-0">▸</span>';
+      else if (type === 'info') prefix = '<span class="text-slate-600 shrink-0">|</span>';
+
+      line.innerHTML = `${prefix}<span class="${SEQ_STYLES[type] || 'text-slate-400'}">${text}</span>`;
+      log.appendChild(line);
+      log.scrollTop = log.scrollHeight;
+    }
+
+    function termSleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    async function playSequence() {
+      if (sequencePlaying) return;
+      sequencePlaying = true;
+
+      const log = document.getElementById('term-log');
+      const status = document.getElementById('term-status');
+      const replay = document.getElementById('term-replay');
+
+      log.innerHTML = '';
+      log.classList.remove('hidden');
+      replay.disabled = true;
+      replay.classList.add('opacity-40', 'cursor-not-allowed');
+
+      status.innerHTML = '<span class="inline-block w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span><span class="text-amber-400">Booting...</span>';
+
+      for (let i = 0; i < INTRO_SEQUENCE.length; i++) {
+        const step = INTRO_SEQUENCE[i];
+        appendTermLine(step.type, step.text);
+        if (step.delay) await termSleep(step.delay);
+      }
+
+      // Closing cursor line
+      const cursorLine = document.createElement('div');
+      cursorLine.className = 'flex items-center gap-1.5 text-emerald-400';
+      cursorLine.innerHTML = `<span>$</span><span class="term-cursor"></span>`;
+      log.appendChild(cursorLine);
+      log.scrollTop = log.scrollHeight;
+
+      status.innerHTML = '<span class="inline-block w-2 h-2 rounded-full bg-emerald-400"></span><span class="text-emerald-400">Systems Online ✓</span>';
+
+      replay.disabled = false;
+      replay.classList.remove('opacity-40', 'cursor-not-allowed');
+      sequencePlaying = false;
+    }
+
+    // Showcase Filtering
+    function filterShowcase(category) {
+      const items = document.querySelectorAll('.showcase-item');
+      
+      // Update Button Styles
+      ['all', 'apps', 'web3', 'tools'].forEach(cat => {
+        const btn = document.getElementById(`btn-showcase-${cat}`);
+        if (cat === category) {
+          btn.className = "px-4 py-2 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/40";
+        } else {
+          btn.className = "px-4 py-2 rounded-lg bg-dark-card text-slate-400 border border-dark-border hover:text-white";
+        }
+      });
+
+      // Filter Visibility
+      items.forEach(item => {
+        if (category === 'all' || item.classList.contains(category)) {
+          item.style.display = 'block';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+
+    // Form Submit Simulation
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      const statusEl = document.getElementById('form-status');
+      statusEl.classList.remove('hidden');
+      showToast("Pesan berhasil dikirim!");
+    }
+
+    // Command Palette Modal
+    function toggleCommandPalette() {
+      const modal = document.getElementById('cmd-palette');
+      if (modal.classList.contains('hidden')) {
+        modal.classList.remove('hidden');
+        document.getElementById('cmd-input').focus();
+      } else {
+        modal.classList.add('hidden');
+      }
+    }
+
+    function filterCommandList() {
+      const query = document.getElementById('cmd-input').value.toLowerCase();
+      const items = document.querySelectorAll('.cmd-item');
+      items.forEach(item => {
+        if (item.innerText.toLowerCase().includes(query)) {
+          item.style.display = 'flex';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+
+    // Mobile Menu Toggle
+    function toggleMobileMenu() {
+      const menu = document.getElementById('mobile-menu');
+      menu.classList.toggle('hidden');
+    }
+
+    // Copy Domain Function (execCommand fallback compliant)
+    function copyDomain() {
+      const domainText = "0xfndlabs.my.id";
+      
+      const tempInput = document.createElement("input");
+      tempInput.value = domainText;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      
+      try {
+        document.execCommand("copy");
+        showToast("Domain 0xfndlabs.my.id berhasil disalin!");
+      } catch (err) {
+        showToast("Gagal menyalin domain.");
+      }
+      
+      document.body.removeChild(tempInput);
+    }
+
+    // Toast Notification System
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-message');
+      toastMsg.innerText = message;
+      
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 3000);
+    }
+
+    // Keyboard Shortcut Event Listener (Cmd+K / Ctrl+K)
+    window.addEventListener('keydown', function(e) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        toggleCommandPalette();
+      }
+      if (e.key === 'Escape') {
+        const modal = document.getElementById('cmd-palette');
+        if (!modal.classList.contains('hidden')) {
+          modal.classList.add('hidden');
+        }
+      }
+    });
+
+    // Auto-run welcome sequence on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(playSequence, 400);
+    });
+  </script>
+</body>
+</html>
